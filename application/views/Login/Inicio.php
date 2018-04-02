@@ -36,7 +36,7 @@
 									<form id="formAcceder">
 										<div class="form-group label-floating">
 											<label class="control-label">Usuario</label>
-											<input type="text" class="form-control" name="cve_usuario" id="cve_usuario">
+											<input type="text" class="form-control" name="cve_usuario" id="cve_usuario" autofocus>
 										</div>
 										<div class="form-group label-floating">
 											<label class="control-label">Contraseña</label>

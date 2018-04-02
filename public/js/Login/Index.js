@@ -21,7 +21,7 @@ $(document).ready(function () {
 			dataType: 'json',
 			success: function (json) {
 				if (json.bandera == true) {
-					window.location.replace(response.default_controller);
+					window.location.replace(json.default_controller);
 				} else {
 					swal({
 						title: "Atiende!",

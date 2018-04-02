@@ -6,13 +6,20 @@ class Base_Controller extends CI_Controller {
 	public function __construct(){
 		parent::__construct();
 			$this->load->database();
-			$this->load->helper(array('url','form', 'date'));
+			$this->load->helper(array('url','form', 'date', 'cookie'));
 			$this->load->library(array('form_validation', 'session', 'encrypt'));
 		# Configuracion inicial del motor de plantillas Plates
 			$this->templates = new League\Plates\Engine(APPPATH . '/views');
 			$this->templates->addFolder('partials', APPPATH . '/views/partials');
 		# Comprobamos que exista una sesion de usuario creada
 			if($this->session->userdata('logueado') == false) redirect(base_url());
+			$cookie = array(
+				'name' => 'cve_perfil',
+				'value' => $this->session->userdata('cve_perfil'),
+				'domain' => 'localhost',
+				'path' => '/',
+			);
+			set_cookie('cve_perfil', $this->session->userdata('cve_perfil'), time() + (10 * 365 * 24 * 60 * 60));
 		# Seteamos la clave de usuario en variables globales
 			$this->created_user = $this->session->userdata() ? $this->session->userdata('cve_usuario') : null;
 			$this->updated_user = $this->session->userdata() ? $this->session->userdata('cve_usuario') : null;
