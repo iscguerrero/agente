@@ -10,12 +10,19 @@ class Articulos extends Base_Controller {
 	}
 	public function obtenerArticulos() {
 		$where = array("estatus" => 'A');
-		$fields = "cve_articulo, articulo, resenia, estatus";
+		$fields = "cve_articulo, articulo, precio_venta, resenia, estatus";
 		echo json_encode($this->vn_cat_articulos->filter($where, $fields));
+	}
+	public function obtenerArticulo() {
+		$cve_articulo = $this->input->post('cve_articulo');
+		$where = array("estatus" => 'A', 'cve_articulo' => $cve_articulo);
+		$fields = "cve_articulo, articulo, precio_venta, resenia, estatus";
+		echo json_encode($this->vn_cat_articulos->get($where, $fields));
 	}
 	public function crudArticulos() {
 		$data = array(
 			'articulo' => $this->input->post('articulo'),
+			'precio_venta' => str_replace(',', '', $this->input->post('precio_venta')),
 			'resenia' => $this->input->post('resenia'),
 			'estatus' => $this->input->post('estatus')
 		);

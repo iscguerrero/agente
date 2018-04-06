@@ -28,14 +28,12 @@ $(document).ready(function () {
 
 	// Clic en el boton editar de la tabla de rutas
 	$('#tRutas tbody').on('click', 'button.editar', function () {
-		$('#fRutas input, textarea').closest('div').removeClass('is-empty');
 		$('#mRutas').modal('show');
 	});
 
 	// Limpiar el formulario de rutas
 	$('#mRutas').on('hidden.bs.modal', function (e) {
-		$('#cve_ruta, #ruta, #resenia').val('');
-		$('#fRutas input, textarea').closest('div').addClass('is-empty');
+		$('#fRutas input').val('');
 	}).on('shown.bs.modal', function (e) {
 		$('#ruta').focus();
 	});

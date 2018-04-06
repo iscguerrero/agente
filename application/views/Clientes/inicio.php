@@ -1,16 +1,11 @@
 <?php $this->layout('Layout', ['controller'=>'Clientes']) ?>
 <?php $this->start('css') ?>
-<style>
-	.btn-group, .btn-group-vertical {
-		margin: 3px 1px;
-	}
-</style>
 <?php $this->stop() ?>
 <?php $this->start('incontainer') ?>
 <div class="row">
 	<div class="col-xs-12">
 		<div class="card">
-				<div class="card-header" data-background-color="purple">
+				<div class="card-header">
 					<h4 class="title">Clientes</h4>
 					<p class="category">Catálogo de clientes, altas y modificaciones</p>
 				</div>
@@ -36,83 +31,93 @@
 				<div class="modal-body">
 					<div class="row">
 						<div class="col-xs-12 col-sm-4">
-							<div class="form-group label-floating">
+							<div class="form-group">
 								<label class="control-label">Nombre</label>
 								<input type="text" class="form-control" name="nombre" id="nombre" required>
 							</div>
 						</div>
 						<div class="col-xs-12 col-sm-4">
-							<div class="form-group label-floating">
+							<div class="form-group">
 								<label class="control-label">Apellidos</label>
 								<input type="text" class="form-control" name="apellidos" id="apellidos" required>
 							</div>
 						</div>
 						<div class="col-xs-12 col-sm-4">
-							<div class="form-group label-floating">
+							<div class="form-group">
 								<label class="control-label">Teléfono</label>
 								<input type="text" class="form-control" name="telefono" id="telefono" required>
 							</div>
 						</div>
 						<div class="col-xs-12 col-sm-4">
 							<div class="form-group">
-								<select class="selectpicker" data-width="100%" data-style="btn select-with-transition" title="Ruta" name="cve_ruta" id="cve_ruta" required></select>
+								<select class="selectpicker" data-style="btn btn-danger btn-block" title="Ruta" name="cve_ruta" id="cve_ruta" required></select>
 							</div>
 						</div>
 						<div class="col-xs-12 col-sm-4">
 							<div class="form-group">
-								<select class="selectpicker" data-width="100%" data-style="btn select-with-transition" title="Estado" name="idEstado" id="idEstado" required></select>
+								<select class="selectpicker" data-style="btn btn-danger btn-block" title="Estado" name="idEstado" id="idEstado" required></select>
 							</div>
 						</div>
 						<div class="col-xs-12 col-sm-4">
 							<div class="form-group">
-								<select class="selectpicker" data-width="100%" data-style="btn select-with-transition" title="Municipio" name="idMunicipio" id="idMunicipio" required></select>
+								<select class="selectpicker" data-style="btn btn-danger btn-block" title="Municipio" name="idMunicipio" id="idMunicipio" required></select>
 							</div>
 						</div>
 						<div class="col-xs-12 col-sm-8">
-							<div class="form-group label-floating">
+							<div class="form-group">
 								<label class="control-label">Asentamiento</label>
 								<input type="text" class="form-control autocomplete" name="asentamiento" id="asentamiento" required>
 							</div>
 						</div>
 						<div class="col-xs-12 col-sm-4">
-							<div class="form-group label-floating">
+							<div class="form-group">
 								<label class="control-label" for="tipo">Tipo</label>
 								<input type="text" class="form-control autocomplete" name="tipo" id="tipo" readonly>
 							</div>
 						</div>
 						<div class="col-xs-12 col-sm-3">
-							<div class="form-group label-floating">
+							<div class="form-group">
 								<label class="control-label">Zona</label>
 								<input type="text" class="form-control autocomplete" name="zona" id="zona" readonly>
 							</div>
 						</div>
 						<div class="col-xs-12 col-sm-3">
-							<div class="form-group label-floating">
+							<div class="form-group">
 								<label class="control-label">C. P.</label>
 								<input type="text" class="form-control autocomplete" name="cp" id="cp" readonly>
 							</div>
 						</div>
 						<div class="col-xs-12 col-sm-6">
-							<div class="form-group label-floating">
+							<div class="form-group">
 								<label class="control-label">Ciudad</label>
 								<input type="text" class="form-control autocomplete" name="ciudad" id="ciudad" readonly>
 							</div>
 						</div>
-						<div class="col-xs-12 col-sm-12">
-							<div class="form-group label-floating">
+						<div class="col-xs-12 col-sm-6">
+							<div class="form-group">
 								<label class="control-label"> Dirección</label>
 								<textarea class="form-control" rows="2" name="direccion" id="direccion" required></textarea>
 							</div>
 						</div>
-						<div class="col-xs-12 col-sm-12">
-							<div class="form-group label-floating">
+						<div class="col-xs-12 col-sm-6">
+							<div class="form-group">
 								<label class="control-label">Anotaciones sobre el cliente</label>
-								<textarea class="form-control" rows="3" name="anotaciones" id="anotaciones"></textarea>
+								<textarea class="form-control" rows="2" name="anotaciones" id="anotaciones"></textarea>
 							</div>
 						</div>
-						<div class="col-xs-12 col-sm-3">
+						<div class="col-xs-6 col-sm-4">
 							<div class="form-group">
-								<select class="selectpicker pull-left" data-width="150px" data-style="btn select-with-transition" title="Estatus" name="estatus" id="estatus" required>
+								<select class="selectpicker pull-left" data-style="btn btn-danger btn-block" title="Periodo de cobro" name="periodicidad" id="periodicidad" required>
+									<option value="A">Semanal</option>
+									<option value="B">Quincenal</option>
+									<option value="C">Mensual</option>
+									<option value="D">Bimestral</option>
+								</select>
+							</div>
+						</div>
+						<div class="col-xs-12 col-sm-4">
+							<div class="form-group">
+								<select class="selectpicker" data-style="btn btn-danger btn-block" title="Estatus" name="estatus" id="estatus" required>
 									<option value="A">Activo</option>
 									<option value="B">Suspendido</option>
 								</select>
@@ -130,8 +135,6 @@
 </div>
 <?php $this->stop() ?>
 <?php $this->start('js') ?>
-	<script src="<?php echo base_url('assets/js/bootstrap-table.js') ?>"></script>
-	<script src="<?php echo base_url('assets/js/locale/bootstrap-table-es-MX.min.js')?>"></script>
 	<script src="<?php echo base_url('public/js/master.js') ?>"></script>
 	<script src="<?php echo base_url('public/js/Clientes/inicio.js') ?>"></script>
 <?php $this->stop() ?>

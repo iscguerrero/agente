@@ -5,7 +5,7 @@
 <div class="row">
 	<div class="col-xs-12">
 		<div class="card">
-				<div class="card-header" data-background-color="purple">
+				<div class="card-header">
 					<h4 class="title">Articulos</h4>
 					<p class="category">Catálogo de artículos, altas y modificaciones</p>
 				</div>
@@ -35,18 +35,19 @@
 				<div class="modal-body">
 					<div class="row">
 						<div class="col-xs-12">
-							<div class="form-group label-floating">
+							<div class="form-group">
 								<label class="control-label">Artículo</label>
 								<input type="text" class="form-control" name="articulo" id="articulo" required>
 							</div>
 							<div class="form-group">
-								<label>Reseña</label>
-								<div class="form-group label-floating">
-									<label class="control-label"> Escribe una breve descripción de la ruta</label>
-									<textarea class="form-control" rows="3" name="resenia" id="resenia"></textarea>
-								</div>
+								<label class="control-label">Precio de venta</label>
+								<input type="number" class="form-control" name="precio_venta" id="precio_venta" in="0" step="0.01" required>
 							</div>
-							<select class="selectpicker" data-style="btn select-with-transition" title="Estatus" name="estatus" id="estatus" required>
+							<div class="form-group">
+								<label>Reseña</label>
+								<textarea class="form-control" rows="3" name="resenia" id="resenia"></textarea>
+							</div>
+							<select class="selectpicker" data-style="btn btn-danger btn-block" title="Estatus" name="estatus" id="estatus" required>
 								<option value="A">Activa</option>
 								<option value="B">Suspendida</option>
 							</select>
@@ -63,8 +64,6 @@
 </div>
 <?php $this->stop() ?>
 <?php $this->start('js') ?>
-	<script src="<?php echo base_url('assets/js/bootstrap-table.js') ?>"></script>
-	<script src="<?php echo base_url('assets/js/locale/bootstrap-table-es-MX.min.js')?>"></script>
 	<script src="<?php echo base_url('public/js/master.js') ?>"></script>
 	<script src="<?php echo base_url('public/js/Articulos/inicio.js') ?>"></script>
 <?php $this->stop() ?>

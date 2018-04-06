@@ -20,11 +20,16 @@ class Clientes extends Base_Controller {
 			'anotaciones' => $this->input->post('anotaciones'),
 			'telefono' => $this->input->post('telefono'),
 			'direccion' => $this->input->post('direccion'),
-			'estatus' => $this->input->post('estatus')
+			'estatus' => $this->input->post('estatus'),
+			'periodicidad' => $this->input->post('periodicidad'),
 		);
-		if($this->input->post('cve_usuario') != '') $data['cve_usuario'] = $this->input->post('cve_usuario');
+		if($this->input->post('cve_cliente') != '') $data['cve_cliente'] = $this->input->post('cve_cliente');
 
 		$this->vn_cat_clientes->save($data) ? exit(json_encode(array('bandera'=>true, 'msj'=>'Petición procesada con éxito'))) : exit(json_encode(array('bandera'=>false, 'msj'=>'Se presento un error al procesar la solicitud')));
+	}
+	public function autocomplete() {
+		$term = $this->input->get('term');
+		echo json_encode($this->vn_cat_clientes->autocomplete($term));
 	}
 
 }

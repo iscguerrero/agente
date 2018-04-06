@@ -13,6 +13,11 @@ $(document).ready(function () {
 			{ field: 'articulo', title: 'Artículo', align: 'left', sortable: true },
 			{ field: 'resenia', title: 'Reseña', align: 'left' },
 			{
+				field: 'precio_venta', title: 'Precio', align: 'right', formatter: function (value, row, index) {
+					return formato_numero(value, 2, '.', ',');
+				}
+			},
+			{
 				title: '', align: 'center', formatter: function (value, row, index) {
 					return "<button type='button' class='btn btn-warning btn-xs editar' title='Editar información'>Editar</button>";
 				}
@@ -21,6 +26,7 @@ $(document).ready(function () {
 		onClickRow: function (row, $element, field) {
 			$('#cve_articulo').val(row.cve_articulo);
 			$('#articulo').val(row.articulo);
+			$('#precio_venta').val(row.precio_venta);
 			$('#resenia').val(row.resenia);
 			$('#estatus').selectpicker('val', row.estatus);
 		}
@@ -28,14 +34,12 @@ $(document).ready(function () {
 
 	// Clic en el boton editar de la tabla de articulos
 	$('#tArticulos tbody').on('click', 'button.editar', function () {
-		$('#fArticulos input, textarea').closest('div').removeClass('is-empty');
 		$('#mArticulos').modal('show');
 	});
 
 	// Limpiar el formulario de articulos
 	$('#mArticulos').on('hidden.bs.modal', function (e) {
-		$('#cve_articulo, #articulo, #resenia').val('');
-		$('#fArticulo input, textarea').closest('div').addClass('is-empty');
+		$('#fArticulos input').val('');
 	}).on('shown.bs.modal', function (e) {
 		$('#articulo').focus();
 	});

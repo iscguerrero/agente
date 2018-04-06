@@ -26,6 +26,7 @@ class Base_Model extends CI_Model {
 	# Constructor de la clase
 	public function  __construct() {
 		parent::__construct();
+		$this->db->query("SET lc_time_names = 'es_MX'");
 	}
 
 	/* get, Metodo para obtener la informacion de un registro en particular, si se desea un listado de registros hay que usar el metodo 'filter'

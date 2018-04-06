@@ -1,4 +1,5 @@
 $(document).ready(function () {
+	$cve_cliente = $cliente = '';
 	// Cargamos los catálogos de la vista
 	$rutas = ajax('../Rutas/obtenerRutas', null);
 	$.each($rutas, function (i, item) {
@@ -41,10 +42,6 @@ $(document).ready(function () {
 			$('#cp').val(ui.item.cp);
 			$('#zona').val(ui.item.zona);
 			$('#ciudad').val(ui.item.ciudad);
-			$('#tipo').closest('div').removeClass('is-empty');
-			$('#cp').closest('div').removeClass('is-empty');
-			$('#zona').closest('div').removeClass('is-empty');
-			$('#ciudad').closest('div').removeClass('is-empty');
 		}
 	});
 	// Configuracion de la tabla de clientes
@@ -58,6 +55,7 @@ $(document).ready(function () {
 		classes: 'table-condensed',
 		columns: [
 			{ field: 'cve_cliente', visible: false },
+			{ field: 'periodicidad', visible: false },
 			{ field: 'idsepomex', visible: false },
 			{ field: 'cve_ruta', visible: false },
 			{ field: 'estatus', visible: false },
@@ -70,18 +68,20 @@ $(document).ready(function () {
 			{ field: 'tipo', visible: false },
 			{ field: 'nombre', title: 'Nombre(s)', align: 'left', sortable: true },
 			{ field: 'apellidos', title: 'Apellidos', align: 'left', sortable: true },
-			{ field: 'telefono', title: 'Teléfono', align: 'left', sortable: true },
+			{ field: 'telefono', title: 'Teléfono', align: 'left' },
 			{ field: 'ruta', title: 'Ruta', align: 'left', sortable: true },
 			{ field: 'estado', title: 'Estado', align: 'left', sortable: true },
 			{ field: 'municipio', title: 'Municipio', align: 'left', sortable: true },
 			{ field: 'asentamiento', title: 'Asentamiento', align: 'left', sortable: true },
 			{
 				title: '', align: 'center', formatter: function (value, row, index) {
-					return "<button type='button' class='btn btn-warning btn-xs editar' title='Ver/Editar información'>Ver</button> <button type='button' class='btn btn-info btn-xs editar' title='Ver estado de cuenta'>Estado</button>";
+					return "<button type='button' class='btn btn-warning btn-xs editar' title='Ver/Editar información'>Ver</button> <button type='button' class='btn btn-info btn-xs estado' title='Ver estado de cuenta'>Estado</button>";
 				}
 			}
 		],
 		onClickRow: function (row, $element, field) {
+			$cve_cliente = row.cve_cliente;
+			$cliente = row.nombre + ' ' + row.apellidos;
 			$('#cve_cliente').val(row.cve_cliente);
 			$('#idsepomex').val(row.idsepomex);
 			$('#nombre').val(row.nombre);
@@ -96,6 +96,7 @@ $(document).ready(function () {
 			});
 			$('#idMunicipio').selectpicker('refresh');
 			$('#idMunicipio').selectpicker('val', row.idMunicipio);
+			$('#periodicidad').selectpicker('val', row.periodicidad);
 			$('#asentamiento').val(row.asentamiento);
 			$('#tipo').val(row.tipo);
 			$('#cp').val(row.cp);
@@ -109,21 +110,25 @@ $(document).ready(function () {
 
 	// Clic en el boton editar de la tabla de clientes
 	$('#tClientes tbody').on('click', 'button.editar', function () {
-		$('#fClientes input, textarea').closest('div').removeClass('is-empty');
 		$('#mClientes').modal('show');
+	});
+
+	// Abrir el estado de cuenta del cliente en una nueva pestaña
+	$('#tClientes tbody').on('click', 'button.estado', function () {
+		$.cookie('cve_cliente', $cve_cliente, { path: '/' });
+		$.cookie('cliente', $cliente, { path: '/' });
+		window.location.href = '../Cobranza/Inicio';
 	});
 
 	// Limpiar el formulario de clientes
 	$('#mClientes').on('hidden.bs.modal', function (e) {
-		$('#cve_cliente, #idsepomex, #nombre, #apellidos, #telefono, #asentamiento, #tipo, #cp, #zona, #ciudad, #anotaciones, #direccion').val('');
-		$('#cve_ruta, #idEstado, #idMunicipio, #estatus').selectpicker('val', '');
+		$('#fClientes input, textarea').val('');
+		$('#cve_ruta, #idEstado, #idMunicipio, #estatus, #periodicidad').selectpicker('val', '');
 		$('#idMunicipio').empty().selectpicker('refresh');
-		$('#fClientes input, textarea').closest('div').addClass('is-empty');
 	}).on('shown.bs.modal', function (e) {
 		if ($.cookie('cve_perfil') != '001') {
 			$('#fClientes input, textarea').prop('readonly', true);
 			$('#fClientes select').prop('disabled', true);
-			$('#fClientes button[type="submit"]').addClass('hidden');
 		}
 		$('#nombre').focus();
 	});
