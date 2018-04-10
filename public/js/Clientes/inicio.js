@@ -16,6 +16,10 @@ $(document).ready(function () {
 			$('#idMunicipio').append("<option value='" + item.idMunicipio + "'>" + item.municipio + "</option>");
 		});
 		$('#idMunicipio').selectpicker('refresh');
+		$('#idsepomex, #tipo, #cp, #zona, #ciudad, #asentamiento').val('');
+	});
+	$('#idMunicipio').change(function () {
+		$('#idsepomex, #tipo, #cp, #zona, #ciudad, #asentamiento').val('');
 	});
 	$('.selectpicker').selectpicker('refresh');
 	// Configuracion del autocomplete de asentamientos
