@@ -9,7 +9,14 @@ class Clientes extends Base_Controller {
 		echo $this->templates->render('Clientes/inicio');
 	}
 	public function obtenerClientes() {
-		echo json_encode($this->vn_cat_clientes->_filter());
+		$cve_ruta = $this->input->post('cve_ruta');
+		$clientes = $this->vn_cat_clientes->_filter($cve_ruta);
+		foreach ($clientes as $key => $cliente) {
+			$cliente->articulos = array('uno', 'dos');
+			$cliente->fecha_ultimo_abono = '10-Marzo-2016';
+			$cliente->importe_ultimo_abono = '120';
+		}
+		echo json_encode($clientes);
 	}
 	public function crudClientes() {
 		$data = array(

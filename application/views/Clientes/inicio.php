@@ -1,5 +1,11 @@
 <?php $this->layout('Layout', ['controller'=>'Clientes']) ?>
 <?php $this->start('css') ?>
+	<style>
+		.bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) {
+			width: 169px;
+			margin-bottom: 0px;
+		}
+	</style>
 <?php $this->stop() ?>
 <?php $this->start('incontainer') ?>
 <div class="row">
@@ -19,7 +25,10 @@
 <?php $this->start('outcontainer') ?>
 <!-- Toolbar para la tabla de rutas -->
 <div id="toolbar">
-	<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#mClientes"><i class="fa fa-plus"></i> Alta</button>
+	<select class="selectpicker" data-style="btn btn-danger btn-block" title="Ruta" name="_cve_ruta" id="_cve_ruta" data-style="width: '150px'"></select>
+	<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#mClientes" id="btnAlta">Alta</button>
+	<button type='button' class='btn btn-warning' title='Ver/Editar información'>Ver</button>
+	<button type='button' class='btn btn-info' title='Ver estado de cuenta'>Estado</button>
 </div>
 <!-- Modal para editar y dar de alta rutas -->
 <div class="modal fade" tabindex="-1" role="dialog" id="mClientes">
@@ -60,7 +69,7 @@
 						</div>
 						<div class="col-xs-12 col-sm-4">
 							<div class="form-group">
-								<select class="selectpicker" data-style="btn btn-danger btn-block" title="Municipio" name="idMunicipio" id="idMunicipio" required></select>
+								<select class="selectpicker" data-live-search="true" data-style="btn btn-danger btn-block" title="Municipio" name="idMunicipio" id="idMunicipio" required></select>
 							</div>
 						</div>
 						<div class="col-xs-12 col-sm-8">

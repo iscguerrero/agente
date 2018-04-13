@@ -21,7 +21,7 @@
 	</style>
 	<?php echo $this->section('css') ?>
 </head>
-<body>
+<body class="sidebar-mini">
 	<?php echo $this->section('outcontainer') ?>
 	<div class="wrapper">
 		<div class="sidebar" data-background-color="white" data-active-color="danger">
