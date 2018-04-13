@@ -40,7 +40,7 @@ class Cobranza extends Base_Controller {
 	}
 
 	public function crudVentas() {
-		$cve_cliente = $this->input->post('cve_cliente');
+		$cve_cliente = null !== $this->input->post('cve_cliente') ? $this->input->post('cve_cliente') : $this->input->post('_cve_cliente');
 		$cve_articulo = $this->input->post('cve_articulo');
 		$precio_venta = $this->input->post('precio_venta');
 		$periodicidad = $this->input->post('periodicidad');
@@ -63,7 +63,7 @@ class Cobranza extends Base_Controller {
 	}
 
 	public function crudPagos() {
-		$cve_cliente = $this->input->post('_cve_cliente');
+		$cve_cliente = null !== $this->input->post('_cve_cliente') ? $this->input->post('_cve_cliente') : $this->input->post('__cve_cliente');
 		$importe = $this->input->post('importe');
 		$anotaciones = $this->input->post('anotaciones');
 		$es_nota_de_credito = null !== $this->input->post('es_nota_de_credito') ? '1' : '0';

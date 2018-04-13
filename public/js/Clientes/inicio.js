@@ -2,11 +2,11 @@ $(document).ready(function () {
 	$cve_cliente = $cliente = '';
 	// Cargamos los catálogos de la vista
 	$rutas = ajax('../Rutas/obtenerRutas', null);
-	$('#_cve_ruta').append("<option value=''>Selecciona...</option>");
 	$.each($rutas, function (i, item) {
 		$('#cve_ruta').append("<option value='" + item.cve_ruta + "'>" + item.ruta + "</option>");
 		$('#_cve_ruta').append("<option value='" + item.cve_ruta + "'>" + item.ruta + "</option>");
 	});
+	$('#_cve_ruta').append("<option value=''>Todas</option>");
 	$estados = ajax('../_Sepomex/estados', null);
 	$.each($estados, function (i, item) {
 		$('#idEstado').append("<option value='" + item.idEstado + "'>" + item.estado + "</option>");
@@ -22,6 +22,19 @@ $(document).ready(function () {
 	});
 	$('#idMunicipio').change(function () {
 		$('#idsepomex, #tipo, #cp, #zona, #ciudad, #asentamiento').val('');
+	});
+	$articulos = ajax('../Articulos/obtenerArticulos', null);
+	$.each($articulos, function (i, item) {
+		$('#cve_articulo').append("<option value='" + item.cve_articulo + "'>" + item.articulo + "</option>");
+	});
+	// Cargar el catálogo de clientes al seleccionar una ruta
+	$('#_cve_ruta').change(function () {
+		$('#tClientes').bootstrapTable('load', obtenerClientes());
+	});
+	// Obtenemos el precio del articulo seleccionado
+	$('#cve_articulo').change(function () {
+		$articulo = ajax('../Articulos/obtenerArticulo', { cve_articulo: $('#cve_articulo').val() });
+		$('#precio_venta').val($articulo.precio_venta).closest('div').removeClass('is-empty');
 	});
 	$('.selectpicker').selectpicker('refresh');
 	// Configuracion del autocomplete de asentamientos
@@ -57,23 +70,33 @@ $(document).ready(function () {
 		search: true,
 		showColumns: true,
 		clickToSelect: true,
-		pagination: true,
-		pageSize: 10,
-		pageList: [10, 25, 50],
-		classes: 'table-condensed',
+		pagination: false,
+		showToggle: true,
+		icons: {
+			paginationSwitchDown: 'glyphicon-collapse-down icon-chevron-down',
+			paginationSwitchUp: 'glyphicon-collapse-up icon-chevron-up',
+			refresh: 'glyphicon-refresh icon-refresh',
+			toggle: 'fa fa-list-alt',
+			columns: 'fa fa-list',
+			detailOpen: 'glyphicon-plus icon-plus',
+			detailClose: 'glyphicon-minus icon-minus'
+		},
+		classes: 'table table-hover',
 		columns: [
-			{ field: 'ruta', title: 'Ruta', align: 'left', sortable: true },
+			{radio: true},
+			{ field: 'ruta', title: 'Ruta', halign: 'left', align: 'left', sortable: true },
 			{
-				field: 'nombre', title: 'Cliente', align: 'left', sortable: true, formatter: function (value, row, index) {
+				field: 'nombre', title: 'Cliente', halign: 'left', align: 'left', sortable: true, formatter: function (value, row, index) {
 					return row.apellidos + ' ' + row.nombre;
 				},
 			},
-			{ field: 'telefono', title: 'Teléfono', align: 'left' },
-			{ field: 'estado', title: 'Estado', align: 'left', visible: false },
-			{ field: 'municipio', title: 'Municipio', align: 'left', sortable: true },
-			{ field: 'asentamiento', title: 'Asentamiento', align: 'left', sortable: true },
+			{ field: 'telefono', title: 'Teléfono', halign: 'left', align: 'left', visible: false },
+			{ field: 'estado', title: 'Estado', halign: 'left', align: 'left', visible: false, visible: false },
+			{ field: 'municipio', title: 'Municipio', halign: 'left', align: 'left', sortable: true },
+			{ field: 'asentamiento', title: 'Asentamiento', halign: 'left', align: 'left', sortable: true },
+			{ field: 'direccion', title: 'Dirección', halign: 'left', align: 'left', sortable: true },
 			{
-				field: 'periodicidad', title: 'Periodo', align: 'left', formatter: function (value, row, index) {
+				field: 'periodicidad', title: 'Periodo', halign: 'left', align: 'left', formatter: function (value, row, index) {
 					_value = '';
 					switch (value) {
 						case 'A':
@@ -92,11 +115,11 @@ $(document).ready(function () {
 							_value = 'N/A';
 							break;
 					}
-					return _value;
+					return _value + '($' + formato_numero(row.importe_abono, 2, '.', ',') + ')';
 				}
 			},
 			{
-				field: 'articulos', title: 'Articulos', align: 'left', formatter: function (value, row, index) {
+				field: 'articulos', title: 'Articulo(s)', halign: 'left', align: 'left', formatter: function (value, row, index) {
 					if (row.articulos.length > 0)
 						return row.articulos.join();
 					else
@@ -104,13 +127,13 @@ $(document).ready(function () {
 				}
 			},
 			{
-				field: 'venta', title: 'Venta', align: 'right', formatter: function (value, row, index) {
+				field: 'venta', title: 'Venta', halign: 'right', align: 'right', formatter: function (value, row, index) {
 					return formato_numero(value, 2, '.', ',');
 				}
 			},
 			{
-				field: 'fecha_ultimo_abono', title: 'Ultimo abono', align: 'right', formatter: function (value, row, index) {
-					return value + ':' + row.importe_ultimo_abono;
+				field: 'fecha_ultimo_abono', title: 'Último abono', align: 'right', formatter: function (value, row, index) {
+					return value + ' ($' + formato_numero(row.importe_ultimo_abono, 2, '.', ',') + ')';
 				}
 			},
 			{
@@ -122,12 +145,11 @@ $(document).ready(function () {
 			{ field: 'estatus', visible: false },
 			{ field: 'idEstado', visible: false },
 			{ field: 'idMunicipio', visible: false },
-			{ field: 'direccion', visible: false },
 			{ field: 'ciudad', visible: false },
 			{ field: 'zona', visible: false },
 			{ field: 'cp', visible: false },
 			{ field: 'tipo', visible: false },
-			{ field: 'apellidos', title: 'Apellidos', align: 'left', sortable: true, visible: false },
+			{ field: 'apellidos', visible: false },
 			{ field: 'idsepomex', visible: false },
 			{ field: 'cve_ruta', visible: false },
 		],
@@ -135,6 +157,9 @@ $(document).ready(function () {
 			$cve_cliente = row.cve_cliente;
 			$cliente = row.nombre + ' ' + row.apellidos;
 			$('#cve_cliente').val(row.cve_cliente);
+			$('#_cve_cliente').val(row.cve_cliente);
+			$('#__cve_cliente').val(row.cve_cliente);
+			$('#importe').val(row.importe_abono);
 			$('#idsepomex').val(row.idsepomex);
 			$('#nombre').val(row.nombre);
 			$('#apellidos').val(row.apellidos);
@@ -159,29 +184,12 @@ $(document).ready(function () {
 			$('#estatus').selectpicker('val', row.estatus);
 		}
 	});
-
-	// Cargar el catálogo de clientes al seleccionar una ruta
-	$('#_cve_ruta').change(function () {
-		$('#tClientes').bootstrapTable('load', obtenerClientes());
-	});
-
-	// Clic en el boton editar de la tabla de clientes
-	$('#tClientes tbody').on('click', 'button.editar', function () {
-		$('#mClientes').modal('show');
-	});
-
-	// Abrir el estado de cuenta del cliente en una nueva pestaña
-	$('#tClientes tbody').on('click', 'button.estado', function () {
-		$.cookie('cve_cliente', $cve_cliente, { path: '/' });
-		$.cookie('cliente', $cliente, { path: '/' });
-		window.location.href = '../Cobranza/Inicio';
-	});
-
 	// Limpiar el formulario de clientes
 	$('#mClientes').on('hidden.bs.modal', function (e) {
 		$('#fClientes input, textarea').val('');
 		$('#cve_ruta, #idEstado, #idMunicipio, #estatus, #periodicidad').selectpicker('val', '');
 		$('#idMunicipio').empty().selectpicker('refresh');
+		$('#tClientes').bootstrapTable('uncheckAll');
 	}).on('shown.bs.modal', function (e) {
 		if ($.cookie('cve_perfil') != '001') {
 			$('#fClientes input, textarea').prop('readonly', true);
@@ -192,20 +200,97 @@ $(document).ready(function () {
 		}
 		$('#nombre').focus();
 	});
-
+	// Limpiar el formulario de ventas
+	$('#mVentas').on('hidden.bs.modal', function (e) {
+		$('#tClientes').bootstrapTable('uncheckAll');
+		$('#fVentas input, textarea').val('');
+		$('#fPagos input, textarea').val('');
+		$('#cve_articulo').selectpicker('val', '');
+	});
+	// Limpiar el formulario de pagos
+	$('#mPagos').on('hidden.bs.modal', function (e) {
+		$('#tClientes').bootstrapTable('uncheckAll');
+		$('#fVentas input, textarea').val('');
+		$('#fPagos input, textarea').val('');
+		$('#es_nota_de_credito').prop('checked', false);
+	});
+	// Abrir el modal para dar de alta un nuevo cliente
+	$('#btnAlta').click(function () {
+		$('#fClientes input, textarea').val('');
+		$('#cve_ruta, #idEstado, #idMunicipio, #estatus, #periodicidad').selectpicker('val', '');
+		$('#idMunicipio').empty().selectpicker('refresh');
+		$('#mClientes').modal('show');
+	});
+	// Abrir el modal para editar la información del cliente
+	$('#btnVer').click(function () {
+		if ($('#cve_cliente').val() == '') {
+			swal({
+				html: '<h3>Selecciona un cliente del reporte para visualizar</h3>',
+				showConfirmButton: false,
+				type: 'warning'
+			});
+		} else {
+			$('#mClientes').modal('show');
+		}
+	});
+	// Abrir el estado de cuenta del cliente
+	$('#btnEstado').click(function () {
+		if ($('#cve_cliente').val() == '') {
+			swal({
+				html: '<h3>Selecciona un cliente del reporte para visualizar el estado de cuenta</h3>',
+				showConfirmButton: false,
+				type: 'warning'
+			});
+		} else { 
+			$.cookie('cve_cliente', $cve_cliente, { path: '/' });
+			$.cookie('cliente', $cliente, { path: '/' });
+			window.location.href = '../Cobranza/Inicio';
+		}
+	});
+	// Abrir el modal para registrar un nuevo pago
+	$('#btnPago').click(function () {
+		if ($('#__cve_cliente').val() == '') {
+			swal({
+				html: '<h3>Selecciona un cliente del reporte para registrar pago</h3>',
+				showConfirmButton: false,
+				type: 'warning'
+			});
+		} else {
+			$('#mPagos').modal('show');
+		}
+	});
+	// Abrir el modal para registrar una nueva venta
+	$('#btnVenta').click(function () {
+		if ($('#_cve_cliente').val() == '') {
+			swal({
+				html: '<h3>Selecciona un cliente del reporte para registrar venta</h3>',
+				showConfirmButton: false,
+				type: 'warning'
+			});
+		} else {
+			$('#mVentas').modal('show');
+		}
+	});
 	// Ejecucion del formulario de clientes
 	$('#fClientes').submit(function (e) {
 		e.preventDefault();
 		crudClientes();
 	});
-
+	// Ejecucion del formulario de pagos
+	$('#fPagos').submit(function (e) {
+		e.preventDefault();
+		crudPagos();
+	});
+	// Ejecucion del formulario de ventas
+	$('#fVentas').submit(function (e) {
+		e.preventDefault();
+		crudVentas();
+	});
 });
-
 // Funcion para obtener el catalogo de clientes
 function obtenerClientes() {
 	return ajax('obtenerClientes', { cve_ruta: $('#_cve_ruta').val() });
 }
-
 // Funcion para editar o dar de alta un cliente
 function crudClientes() {
 	str = $('#fClientes').serialize();
@@ -246,4 +331,83 @@ function crudClientes() {
 		}
 	});
 }
-
+// Funcion para dar de alta una nueva venta
+function crudVentas() {
+	str = $('#fVentas').serialize();
+	$.ajax({
+		url: '../Cobranza/crudVentas',
+		type: 'POST',
+		async: true,
+		cache: false,
+		dataType: 'json',
+		data: str,
+		beforeSend: function () {
+			swal({
+				html: '<h3>Guardando datos, espera...</h3>',
+				showConfirmButton: false,
+				type: 'info'
+			});
+		},
+		success: function (data) {
+			if (data.bandera == false) {
+				swal({
+					title: "Atiende!",
+					html: data.msj,
+					buttonsStyling: true,
+					confirmButtonClass: "btn btn-warning btn-fill",
+					type: 'warning'
+				});
+				return false
+			} else {
+				$.notify({
+					message: data.msj
+				}, {
+						type: 'success'
+					});
+				$('#tClientes').bootstrapTable('load', obtenerClientes());
+				$('#mVentas').modal('hide');
+				swal.close();
+			}
+		}
+	});
+}
+// Funcion para dar de alta un nuevo pago
+function crudPagos() {
+	str = $('#fPagos').serialize();
+	$.ajax({
+		url: '../Cobranza/crudPagos',
+		type: 'POST',
+		async: true,
+		cache: false,
+		dataType: 'json',
+		data: str,
+		beforeSend: function () {
+			swal({
+				html: '<h3>Guardando datos, espera...</h3>',
+				showConfirmButton: false,
+				type: 'info'
+			});
+		},
+		success: function (data) {
+			if (data.bandera == false) {
+				swal({
+					title: "Atiende!",
+					html: data.msj,
+					buttonsStyling: true,
+					confirmButtonClass: "btn btn-warning btn-fill",
+					type: 'warning'
+				});
+				return false
+			} else {
+				$.notify({
+					message: data.msj
+				}, {
+						type: 'success'
+					});
+				$('#tClientes').bootstrapTable('load', obtenerClientes());
+				$('#mPagos').modal('hide');
+				swal.close();
+			}
+		}
+	});
+}

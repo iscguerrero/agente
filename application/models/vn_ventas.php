@@ -13,8 +13,9 @@ class vn_ventas extends Base_Model {
 		->join('vn_cat_clientes vcc', 'vv.cve_cliente = vcc.cve_cliente', 'INNER')
 		->join('vn_cat_articulos vca', 'vv.cve_articulo = vca.cve_articulo', 'INNER')
 		->where('vv.estatus !=', 'X')
-		->where('vv.fecha_venta >=', $fi)
-		->where('vv.fecha_venta <=', $ff . ' 23:59:59');
+		->where('vv.saldo >', 0);
+		if($fi != '') $this->db->where('vv.fecha_venta >=', $fi);
+		if($ff != '') $this->db->where('vv.fecha_venta <=', $ff . ' 23:59:59');
 		if($cve_cliente != '') $this->db->where('vv.cve_cliente', $cve_cliente);
 		$this->db->order_by('cve_venta');
 		$query = $this->db->get();

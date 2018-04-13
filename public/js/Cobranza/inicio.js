@@ -7,7 +7,6 @@ $(document).ready(function () {
 		$('#title').html('Estado de cuenta de ' + $.cookie('cliente'));
 		$('#tVentas, #tPagos').bootstrapTable('hideColumn', 'cliente');
 	}
-
 	// Autocomplete de los campos del nombre de cliente
 	$('#cliente').autocomplete({
 		minLength: 3,
