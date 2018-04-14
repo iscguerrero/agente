@@ -21,7 +21,7 @@ class vn_pagos extends Base_Model {
 	}
 
 	public function ultimo_pago($cve_cliente) {
-		$this->db->select("importe, date_format(fecha, '%d-%M-%Y') as fecha")
+		$this->db->select("importe, fecha as rfecha, date_format(fecha, '%d-%m-%y') as fecha")
 		->from('vn_pagos')
 		->where('cve_cliente', $cve_cliente)
 		->order_by('cve_pago', 'desc');

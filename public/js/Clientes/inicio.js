@@ -87,12 +87,39 @@ $(document).ready(function () {
 			{ field: 'ruta', title: 'Ruta', halign: 'left', align: 'left', sortable: true },
 			{
 				field: 'nombre', title: 'Cliente', halign: 'left', align: 'left', sortable: true, formatter: function (value, row, index) {
-					return row.apellidos + ' ' + row.nombre;
-				},
+					_value = row.apellidos + ' ' + row.nombre;
+					if (row.clase == 'danger') {
+						_value = "<strong style='color: #EB5E28'>" + row.apellidos + ' ' + row.nombre + '</strong>';
+					} else if (row.clase == 'warning') {
+						_value = "<strong style='color: #F3BB45'>" + row.apellidos + ' ' + row.nombre + '</strong>';
+					} else if (row.clase == 'success') {
+						_value = "<strong style='color: #7A9E9F'>" + row.apellidos + ' ' + row.nombre + '</strong>';
+					}
+					return _value;
+				}
+			},
+			{
+				field: 'clase', title: 'Reputación', halign: 'center', align: 'center', sortable: true, formatter: function (value, row, index) {
+					_value = '';
+					switch (value) {
+						case 'danger':
+							_value = "<strong style='color: #EB5E28'>mala</strong>";
+							break;
+						case 'warning':
+							_value = "<strong style='color: #F3BB45'>regular</strong>";
+							break;
+						case 'success':
+							_value = "<strong style='color: #7A9E9F'>buena</strong>";
+							break;
+						default:
+							break;
+					}
+					return _value;
+				}
 			},
 			{ field: 'telefono', title: 'Teléfono', halign: 'left', align: 'left', visible: false },
 			{ field: 'estado', title: 'Estado', halign: 'left', align: 'left', visible: false, visible: false },
-			{ field: 'municipio', title: 'Municipio', halign: 'left', align: 'left', sortable: true },
+			{ field: 'municipio', title: 'Municipio', halign: 'left', align: 'left', sortable: true, visible: false },
 			{ field: 'asentamiento', title: 'Asentamiento', halign: 'left', align: 'left', sortable: true },
 			{ field: 'direccion', title: 'Dirección', halign: 'left', align: 'left', sortable: true },
 			{
@@ -115,7 +142,7 @@ $(document).ready(function () {
 							_value = 'N/A';
 							break;
 					}
-					return _value + '($' + formato_numero(row.importe_abono, 2, '.', ',') + ')';
+					return _value + '($' + formato_numero(row.importe_abono, 1, '.', ',') + ')';
 				}
 			},
 			{
@@ -128,17 +155,17 @@ $(document).ready(function () {
 			},
 			{
 				field: 'venta', title: 'Venta', halign: 'right', align: 'right', formatter: function (value, row, index) {
-					return formato_numero(value, 2, '.', ',');
+					return formato_numero(value, 1, '.', ',');
 				}
 			},
 			{
 				field: 'fecha_ultimo_abono', title: 'Último abono', align: 'right', formatter: function (value, row, index) {
-					return value + ' ($' + formato_numero(row.importe_ultimo_abono, 2, '.', ',') + ')';
+					return value + ' ($' + formato_numero(row.importe_ultimo_abono, 2, '.', ',') + ')(' + row.dias + ')';
 				}
 			},
 			{
 				field: 'saldo', title: 'Saldo', align: 'right', formatter: function (value, row, index) {
-					return formato_numero(value, 2, '.', ',');
+					return formato_numero(value, 1, '.', ',');
 				}
 			},
 			{ field: 'cve_cliente', visible: false },

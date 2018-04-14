@@ -11,7 +11,7 @@
 <div class="row">
 	<div class="col-xs-12">
 		<div class="card">
-				<div class="card-content">
+				<div class="card-content table-responsive table-full-width">
 					<table id="tClientes"></table>
 				</div>
 		</div>

@@ -36,16 +36,16 @@
 			</div>
 			<div class="sidebar-wrapper">
 				<ul class="nav">
-					<li class="<?php if($this->e($controller) ==  'Cobranza') echo 'active' ?>">
-						<a href="<?php echo base_url('Cobranza/Inicio') ?>">
-							<i class="ti-bookmark-alt"></i>
-							<p>Cobranza</p>
-						</a>
-					</li>
 					<li class="<?php if($this->e($controller) ==  'Clientes') echo 'active' ?>">
 						<a href="<?php echo base_url('Clientes/Inicio') ?>">
 							<i class="ti-id-badge"></i>
 							<p>Clientes</p>
+						</a>
+					</li>
+					<li class="<?php if($this->e($controller) ==  'Cobranza') echo 'active' ?>">
+						<a href="<?php echo base_url('Cobranza/Inicio') ?>">
+							<i class="ti-bookmark-alt"></i>
+							<p>Estado de cuenta</p>
 						</a>
 					</li>
 					<li class="<?php if($this->e($controller) ==  'Rutas') echo 'active' ?>">

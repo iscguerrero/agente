@@ -87,7 +87,8 @@ class Cobranza extends Base_Controller {
 			'cve_usuario' => $this->created_user,
 			'anotaciones' => $anotaciones,
 			'estatus' => 'A',
-			'es_nota_de_credito' => $es_nota_de_credito
+			'es_nota_de_credito' => $es_nota_de_credito,
+			'fecha' => date('Y-m-d')
 		);
 		$cve_pago = $this->vn_pagos->save($data);
 

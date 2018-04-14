@@ -15,8 +15,10 @@ class Clientes extends Base_Controller {
 		$clientes = $this->vn_cat_clientes->_filter($cve_ruta);
 		foreach ($clientes as $cliente) {
 			# Obtenemos los articulos con saldo del cliente
-			$articulos = array(); $saldo = $precio_venta = $importe_abono = 0;
-			$ventas = $this->vn_ventas->_filter('', '', $cliente->cve_cliente);
+			$articulos = array();
+			$saldo = $precio_venta = $importe_abono = $dias = 0;
+			$cliente->clase = '';
+			$ventas = $this->vn_ventas->_filter('', '', $cliente->cve_cliente, 'all');
 			if(count($ventas) > 0) {
 				foreach ($ventas as $venta) {
 					array_push($articulos, $venta->articulo);
@@ -28,12 +30,20 @@ class Clientes extends Base_Controller {
 			$cliente->articulos = $articulos;
 			# Obtenemos la información del último abono del cliente
 			$pago = $this->vn_pagos->ultimo_pago($cliente->cve_cliente);
-
 			$cliente->fecha_ultimo_abono = isset($pago->fecha) ? $pago->fecha : '';
 			$cliente->importe_ultimo_abono = isset($pago->importe) ? $pago->importe : '';
 			$cliente->saldo = $saldo;
 			$cliente->venta = $precio_venta;
 			$cliente->importe_abono = $importe_abono;
+			# Obtenemos el numero de días transcurridos entre el ultimo pago y la fecha actual
+			if(isset($pago->rfecha)) {
+				$dias	= (strtotime(date('Y-m-d')) - strtotime($pago->rfecha))/86400;
+				$dias = floor($dias);
+				if($dias <= 15) $cliente->clase = 'success';
+				if($dias > 15 && $dias < 20) $cliente->clase = 'warning';
+				else if($dias > 21) $cliente->clase = 'danger';
+				$cliente->dias = $dias;
+			}
 		}
 		echo json_encode($clientes);
 	}
