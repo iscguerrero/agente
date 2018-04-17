@@ -46,14 +46,6 @@
 					</div>
 				</div>
 			</div>
-			<footer class="footer footer-transparent">
-				<div class="container">
-					<div class="copyright">
-						&copy; <script>document.write(new Date().getFullYear())</script>
-						DG Consultoria <i class="fa fa-heart"></i> ideas nacen proyectos crecen
-					</div>
-				</div>
-			</footer>
 		</div>
 	</div>
 </body>

@@ -110,15 +110,6 @@
 					<?php echo $this->section('incontainer') ?>
 				</div>
 			</div>
-
-			<footer class="footer">
-				<div class="container-fluid">
-					<div class="copyright pull-right">
-						&copy; <script>document.write(new Date().getFullYear())</script> DG Consultora
-						<i class="fa fa-heart"></i> ideas nacen, proyectos crecen
-					</div>
-				</div>
-			</footer>
 		</div>
 	</div>
 </body>

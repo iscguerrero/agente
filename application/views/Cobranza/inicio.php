@@ -1,5 +1,6 @@
 <?php $this->layout('Layout', ['controller'=>'Cobranza']) ?>
 <?php $this->start('css') ?>
+<link rel="stylesheet" href="<?php echo base_url('assets/css/morris.css') ?>">
 <style>
 	.btn-group, .btn-group-vertical {
 		margin: 3px 1px;
@@ -62,6 +63,11 @@
 						</tr>
 					</tbody>
 				</table>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12">
+				<div id="semanas"></div>
 			</div>
 		</div>
 	</div>
@@ -157,6 +163,10 @@
 								<input type="text" class="form-control" name="__cliente" id="__cliente">
 							</div>
 							<div class="form-group">
+								<label for="cve_ruta">Ruta</label>
+								<select class="selectpicker" data-style="btn btn-danger btn-block" title="Ruta" name="cve_ruta" id="cve_ruta" data-style="width: 100%"></select>
+							</div>
+							<div class="form-group">
 								<label class="control-label">Fecha inicial</label>
 								<input type="text" class="form-control datepicker" name="fi" id="fi" required>
 							</div>
@@ -179,6 +189,8 @@
 <?php $this->start('js') ?>
 	<script src="<?php echo base_url('assets/js/bootstrap-table.js') ?>"></script>
 	<script src="<?php echo base_url('assets/js/locale/bootstrap-table-es-MX.min.js')?>"></script>
+	<script src="<?php echo base_url('assets/js/raphael-min.js') ?>"></script>
+	<script src="<?php echo base_url('assets/js/morris.min.js') ?>"></script>
 	<script src="<?php echo base_url('public/js/master.js') ?>"></script>
 	<script src="<?php echo base_url('public/js/Cobranza/inicio.js') ?>"></script>
 <?php $this->stop() ?>

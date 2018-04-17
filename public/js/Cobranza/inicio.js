@@ -34,6 +34,11 @@ $(document).ready(function () {
 	$.each($articulos, function (i, item) {
 		$('#cve_articulo').append("<option value='" + item.cve_articulo + "'>" + item.articulo + "</option>");
 	});
+	$rutas = ajax('../Rutas/obtenerRutas', null);
+	$.each($rutas, function (i, item) {
+		$('#cve_ruta').append("<option value='" + item.cve_ruta + "'>" + item.ruta + "</option>");
+	});
+	$('#cve_ruta').append("<option value=''>Todas</option>");
 	$('.selectpicker').selectpicker('refresh');
 	// Obtenemos el precio del articulo seleccionado
 	$('#cve_articulo').change(function () {
@@ -52,6 +57,7 @@ $(document).ready(function () {
 			{ field: 'cve_articulo', visible: false },
 			{ field: 'importe_abono', visible: false },
 			{ field: 'estatus', visible: false },
+			{ field: 'ruta', title: 'Ruta', align: 'left' },
 			{ field: 'cliente', title: 'Cliente', align: 'left' },
 			{
 				field: 'articulo', title: 'Artículo', align: 'left', formatter: function (value, row, index) {
@@ -76,6 +82,9 @@ $(document).ready(function () {
 		],
 		onClickRow: function (row, $element, field) {
 			$itemVenta = row.cve_venta;
+		},
+		onCheck: function (row, $element) {
+			$itemVenta = row.cve_venta;
 		}
 	});
 
@@ -89,6 +98,7 @@ $(document).ready(function () {
 			{ field: 'cve_cliente', visible: false },
 			{ field: 'estatus', visible: false },
 			{ field: 'es_nota_de_credito', visible: false },
+			{ field: 'ruta', title: 'Ruta', align: 'left' },
 			{ field: 'cliente', title: 'Cliente', align: 'left' },
 			{ field: 'fecha', title: 'Fecha', align: 'center' },
 			{
@@ -107,6 +117,9 @@ $(document).ready(function () {
 			}
 		],
 		onClickRow: function (row, $element, field) {
+			$itemPago = row.cve_pago;
+		},
+		onCheck: function (row, $element) {
 			$itemPago = row.cve_pago;
 		}
 	});
@@ -163,6 +176,19 @@ $(document).ready(function () {
 		$('#mFiltros').modal('hide');
 	});
 
+	// Configuracion de la grafica de ventas por semana
+	window.graph = Morris.Area({
+		element: 'semanas',
+		behaveLikeLine: true,
+		data: [],
+		xkey: 'semana',
+		ykeys: ['venta'],
+		labels: ['Venta'],
+		parseTime: false,
+		lineColors: ['#7AC29A'],
+		resize: true
+	});
+
 });
 
 // Codigo al cerrar la pestaña
@@ -175,6 +201,12 @@ $(window).on('unload', function () {
 function obtenerVentas() {
 	str = $('#fFiltros').serialize();
 	return ajax('obtenerVentas', str);
+}
+
+// Funcion para obtener las ventas por semana
+function wobtenerVentas() {
+	str = $('#fFiltros').serialize();
+	return ajax('wobtenerVentas', str);
 }
 
 // Funcion para obtener los pagos
@@ -269,6 +301,7 @@ function crudPagos() {
 function renderReporte() {
 	$tventas = $tpagos = $tnc = $tncr = 0;
 	$ventas = obtenerVentas();
+	$wventas = wobtenerVentas();
 	$pagos = obtenerPagos();
 	$('#tVentas').bootstrapTable('load', $ventas);
 	$('#tPagos').bootstrapTable('load', $pagos);
@@ -292,4 +325,12 @@ function renderReporte() {
 	$('#tnc').html('$' + formato_numero($tnc, 2, '.', ','));
 	$('#tncr').html('$' + formato_numero($tncr, 2, '.', ','));
 	$('#r').html('$' + formato_numero($r, 2, '.', ','));
+
+	// Actualización de la gráfica de ventas por semana
+	if ($wventas.length > 0) {
+		window.graph.setData($wventas);
+	} else {
+		window.graph.setData([]);
+	}
+
 }

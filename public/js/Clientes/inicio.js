@@ -117,6 +117,7 @@ $(document).ready(function () {
 							_value = "<strong style='color: #7A9E9F'>buena</strong>";
 							break;
 						default:
+							_value = "<strong>N/A</strong>";	
 							break;
 					}
 					return _value;
@@ -147,7 +148,7 @@ $(document).ready(function () {
 							_value = 'N/A';
 							break;
 					}
-					return _value + '($' + formato_numero(row.importe_abono, 1, '.', ',') + ')';
+					return _value + ' de $' + formato_numero(row.importe_abono, 1, '.', ',');
 				}
 			},
 			{
@@ -165,7 +166,7 @@ $(document).ready(function () {
 			},
 			{
 				field: 'fecha_ultimo_abono', title: 'Último abono', align: 'right', formatter: function (value, row, index) {
-					return value + ' ($' + formato_numero(row.importe_ultimo_abono, 2, '.', ',') + ')(' + row.dias + ')';
+					return '$' + formato_numero(row.importe_ultimo_abono, 2, '.', ',') + ' el ' + value + ' hace ' + row.dias + ' días';
 				}
 			},
 			{
@@ -186,6 +187,36 @@ $(document).ready(function () {
 			{ field: 'cve_ruta', visible: false },
 		],
 		onClickRow: function (row, $element, field) {
+			$cve_cliente = row.cve_cliente;
+			$cliente = row.nombre + ' ' + row.apellidos;
+			$('#cve_cliente').val(row.cve_cliente);
+			$('#_cve_cliente').val(row.cve_cliente);
+			$('#__cve_cliente').val(row.cve_cliente);
+			$('#importe').val(row.importe_abono);
+			$('#idsepomex').val(row.idsepomex);
+			$('#nombre').val(row.nombre);
+			$('#apellidos').val(row.apellidos);
+			$('#cve_ruta').selectpicker('val', row.cve_ruta);
+			$('#telefono').val(row.telefono);
+			$('#idEstado').selectpicker('val', row.idEstado);
+			$('#idMunicipio').empty();
+			$municipios = ajax('../_Sepomex/municipios', { idEstado: $('#idEstado').val() });
+			$.each($municipios, function (i, item) {
+				$('#idMunicipio').append("<option value='" + item.idMunicipio + "'>" + item.municipio + "</option>");
+			});
+			$('#idMunicipio').selectpicker('refresh');
+			$('#idMunicipio').selectpicker('val', row.idMunicipio);
+			$('#periodicidad').selectpicker('val', row.periodicidad);
+			$('#asentamiento').val(row.asentamiento);
+			$('#tipo').val(row.tipo);
+			$('#cp').val(row.cp);
+			$('#zona').val(row.zona);
+			$('#ciudad').val(row.ciudad);
+			$('#anotaciones').val(row.anotaciones);
+			$('#direccion').val(row.direccion);
+			$('#estatus').selectpicker('val', row.estatus);
+		},
+		onCheck: function (row, $element) {
 			$cve_cliente = row.cve_cliente;
 			$cliente = row.nombre + ' ' + row.apellidos;
 			$('#cve_cliente').val(row.cve_cliente);

@@ -20,7 +20,7 @@ class Clientes extends Base_Controller {
 			$articulos = array();
 			$saldo = $precio_venta = $importe_abono = $dias = 0;
 			$cliente->clase = '';
-			$ventas = $this->vn_ventas->_filter('', '', $cliente->cve_cliente, 'all');
+			$ventas = $this->vn_ventas->_filter('', '', $cliente->cve_cliente, 'all', '');
 			if(count($ventas) > 0) {
 				foreach ($ventas as $venta) {
 					array_push($articulos, $venta->articulo);
@@ -44,8 +44,8 @@ class Clientes extends Base_Controller {
 				if($dias <= 15) $cliente->clase = 'success';
 				if($dias > 15 && $dias < 20) $cliente->clase = 'warning';
 				else if($dias > 21) $cliente->clase = 'danger';
-				$cliente->dias = $dias;
 			}
+			$cliente->dias = $dias;
 		}
 		echo json_encode($clientes);
 	}
@@ -70,13 +70,13 @@ class Clientes extends Base_Controller {
 
 		$cve_cliente = $this->vn_cat_clientes->save($data);
 
-		if($this->input->post('cve_cliente') == '' && $cve_cliente !== false) {
+		if($this->input->post('cve_cliente') == '' && $cve_cliente !== false && $this->input->post('_cve_articulo') != '') {
 			$data = array(
 				'cve_cliente' => $cve_cliente,
 				'cve_articulo' => $this->input->post('_cve_articulo'),
 				'cve_usuario' => $this->created_user,
 				'precio_venta' => $this->input->post('_precio_venta'),
-				'saldo' => $this->input->post('_importe_abono'),
+				'saldo' => $this->input->post('_precio_venta'),
 				'importe_abono' => $this->input->post('_importe_abono'),
 				'fecha_venta' => date('Y-m-d'),
 				'fecha_ultimo_pago' => '0000-00:00',

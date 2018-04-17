@@ -55,22 +55,22 @@
 								<input type="text" class="form-control" name="telefono" id="telefono" required>
 							</div>
 						</div>
-						<div class="col-xs-12 col-sm-3">
+						<div class="col-xs-12 col-sm-3" style="height: 80px">
 							<div class="form-group">
 								<label for="cve_ruta">Ruta</label>
-								<select class="selectpicker" data-style="btn btn-danger btn-block" title="Ruta" name="cve_ruta" id="cve_ruta" required></select>
+								<select class="selectpicker col-" data-width="100%" data-style="btn btn-danger btn-block" title="Ruta" name="cve_ruta" id="cve_ruta" required></select>
 							</div>
 						</div>
-						<div class="col-xs-12 col-sm-3">
+						<div class="col-xs-12 col-sm-3" style="height: 80px">
 							<div class="form-group">
 								<label for="idEstado">Estado</label>
-								<select class="selectpicker" data-style="btn btn-danger btn-block" title="Estado" name="idEstado" id="idEstado" required></select>
+								<select class="selectpicker col-" data-width="100%" data-style="btn btn-danger btn-block" title="Estado" name="idEstado" id="idEstado" required></select>
 							</div>
 						</div>
-						<div class="col-xs-12 col-sm-3">
+						<div class="col-xs-12 col-sm-3" style="height: 80px">
 							<div class="form-group">
 							<label for="idMunicipio">Municipio</label>
-								<select class="selectpicker" data-live-search="true" data-style="btn btn-danger btn-block" title="Municipio" name="idMunicipio" id="idMunicipio" required></select>
+								<select class="selectpicker col-" data-width="100%" data-live-search="true" data-style="btn btn-danger btn-block" title="Municipio" name="idMunicipio" id="idMunicipio" required></select>
 							</div>
 						</div>
 						<div class="col-xs-12 col-sm-6">
@@ -169,7 +169,7 @@
 					<div class="row">
 						<div class="col-xs-12">
 							<div class="form-group">
-								<select class="selectpicker" data-style="btn btn-danger btn-block" title="Artículo" name="cve_articulo" id="cve_articulo" required></select>
+								<select class="selectpicker col-" data-width="100%" data-style="btn btn-danger btn-block" title="Artículo" name="cve_articulo" id="cve_articulo" required></select>
 							</div>
 							<div class="form-group">
 								<label class="control-label">Precio de venta</label>
@@ -201,7 +201,7 @@
 						<div class="col-xs-12">
 							<div class="form-group">
 								<label class="control-label">Importe</label>
-								<input type="number" class="form-control" name="importe" id="importe" in="0" step="0.01" required>
+								<input type="number" class="form-control text-right" name="importe" id="importe" in="0" step="0.01" required>
 							</div>
 							<div class="form-group">
 								<label class="control-label">Anotaciones sobre el pago</label>

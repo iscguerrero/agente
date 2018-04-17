@@ -14,17 +14,31 @@ class Cobranza extends Base_Controller {
 	public function obtenerVentas() {
 		$fi = $this->str_to_date($this->input->post('fi'));
 		$ff = $this->str_to_date($this->input->post('ff'));
+		$cve_ruta = $this->input->post('cve_ruta');
 		$cve_cliente = $this->input->post('__cve_cliente');
 
-		echo json_encode($this->vn_ventas->_filter($fi, $ff, $cve_cliente));
+		echo json_encode($this->vn_ventas->_filter($fi, $ff, $cve_cliente, null, $cve_ruta));
+	}
+
+	public function wobtenerVentas() {
+		if($this->input->post('fi') != '') {
+			$fi = $this->str_to_date($this->input->post('fi'));
+			$ff = $this->str_to_date($this->input->post('ff'));
+			$cve_ruta = $this->input->post('cve_ruta');
+			$cve_cliente = $this->input->post('__cve_cliente');
+			echo json_encode($this->vn_ventas->wfilter($fi, $ff, $cve_cliente, $cve_ruta));
+		} else {
+			echo json_encode(array());
+		}
 	}
 
 	public function obtenerPagos() {
 		$fi = $this->str_to_date($this->input->post('fi'));
 		$ff = $this->str_to_date($this->input->post('ff'));
+		$cve_ruta = $this->input->post('cve_ruta');
 		$cve_cliente = $this->input->post('__cve_cliente');
 
-		$pagos = $this->vn_pagos->_filter($fi, $ff, $cve_cliente);
+		$pagos = $this->vn_pagos->_filter($fi, $ff, $cve_cliente, $cve_ruta);
 		foreach ($pagos as $pago) {
 			$_aplicaciones = array();
 			$where = array('cve_pago' => $pago->cve_pago);
