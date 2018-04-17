@@ -43,7 +43,6 @@ class Cobranza extends Base_Controller {
 		$cve_cliente = null !== $this->input->post('cve_cliente') ? $this->input->post('cve_cliente') : $this->input->post('_cve_cliente');
 		$cve_articulo = $this->input->post('cve_articulo');
 		$precio_venta = $this->input->post('precio_venta');
-		$periodicidad = $this->input->post('periodicidad');
 		$importe_abono = $this->input->post('importe_abono');
 
 		$data = array(

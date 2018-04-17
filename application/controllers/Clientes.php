@@ -7,9 +7,11 @@ class Clientes extends Base_Controller {
 		$this->load->model('vn_ventas');
 		$this->load->model('vn_pagos');
 	}
+
 	public function Inicio() {
 		echo $this->templates->render('Clientes/inicio');
 	}
+
 	public function obtenerClientes() {
 		$cve_ruta = $this->input->post('cve_ruta');
 		$clientes = $this->vn_cat_clientes->_filter($cve_ruta);
@@ -47,7 +49,12 @@ class Clientes extends Base_Controller {
 		}
 		echo json_encode($clientes);
 	}
+
 	public function crudClientes() {
+		if($this->input->post('_cve_articulo') != '' && ($this->input->post('_precio_venta') == 0 || $this->input->post('_importe_abono') == 0)) exit(json_encode(array('bandera' => false, 'msj' => 'Registra todos los datos de la primera venta del cliente')));
+		# Iniciamos la transaccion
+		$this->db->trans_begin();
+		# Formamos el data para insertar la informacion del cliente
 		$data = array(
 			'idsepomex' => $this->input->post('idsepomex'),
 			'cve_ruta' => $this->input->post('cve_ruta'),
@@ -61,8 +68,33 @@ class Clientes extends Base_Controller {
 		);
 		if($this->input->post('cve_cliente') != '') $data['cve_cliente'] = $this->input->post('cve_cliente');
 
-		$this->vn_cat_clientes->save($data) ? exit(json_encode(array('bandera'=>true, 'msj'=>'Petición procesada con éxito'))) : exit(json_encode(array('bandera'=>false, 'msj'=>'Se presento un error al procesar la solicitud')));
+		$cve_cliente = $this->vn_cat_clientes->save($data);
+
+		if($this->input->post('cve_cliente') == '' && $cve_cliente !== false) {
+			$data = array(
+				'cve_cliente' => $cve_cliente,
+				'cve_articulo' => $this->input->post('_cve_articulo'),
+				'cve_usuario' => $this->created_user,
+				'precio_venta' => $this->input->post('_precio_venta'),
+				'saldo' => $this->input->post('_importe_abono'),
+				'importe_abono' => $this->input->post('_importe_abono'),
+				'fecha_venta' => date('Y-m-d'),
+				'fecha_ultimo_pago' => '0000-00:00',
+				'fecha_proximo_pago' => '0000-00:00',
+				'estatus' => 'A',
+			);
+			$this->vn_ventas->save($data);
+		}
+		# Finalizamos la transaccion
+		if ($this->db->trans_status() == false) {
+			$this->db->trans_rollback();
+			exit(json_encode(array('bandera' => false, 'msj' => 'Se presento un error al procesar la petición')));
+		} else {
+			$this->db->trans_commit();
+			exit(json_encode(array('bandera' => true, 'msj' => 'Petición procesada con éxito')));
+		}
 	}
+
 	public function autocomplete() {
 		$term = $this->input->get('term');
 		echo json_encode($this->vn_cat_clientes->autocomplete($term));

@@ -26,6 +26,7 @@ $(document).ready(function () {
 	$articulos = ajax('../Articulos/obtenerArticulos', null);
 	$.each($articulos, function (i, item) {
 		$('#cve_articulo').append("<option value='" + item.cve_articulo + "'>" + item.articulo + "</option>");
+		$('#_cve_articulo').append("<option value='" + item.cve_articulo + "'>" + item.articulo + "</option>");
 	});
 	// Cargar el catálogo de clientes al seleccionar una ruta
 	$('#_cve_ruta').change(function () {
@@ -34,7 +35,11 @@ $(document).ready(function () {
 	// Obtenemos el precio del articulo seleccionado
 	$('#cve_articulo').change(function () {
 		$articulo = ajax('../Articulos/obtenerArticulo', { cve_articulo: $('#cve_articulo').val() });
-		$('#precio_venta').val($articulo.precio_venta).closest('div').removeClass('is-empty');
+		$('#precio_venta').val($articulo.precio_venta).closest('div');
+	});
+	$('#_cve_articulo').change(function () {
+		$articulo = ajax('../Articulos/obtenerArticulo', { cve_articulo: $('#_cve_articulo').val() });
+		$('#_precio_venta').val($articulo.precio_venta).closest('div');
 	});
 	$('.selectpicker').selectpicker('refresh');
 	// Configuracion del autocomplete de asentamientos
@@ -214,7 +219,7 @@ $(document).ready(function () {
 	// Limpiar el formulario de clientes
 	$('#mClientes').on('hidden.bs.modal', function (e) {
 		$('#fClientes input, textarea').val('');
-		$('#cve_ruta, #idEstado, #idMunicipio, #estatus, #periodicidad').selectpicker('val', '');
+		$('#cve_ruta, #idEstado, #idMunicipio, #estatus, #periodicidad, #_cve_articulo').selectpicker('val', '');
 		$('#idMunicipio').empty().selectpicker('refresh');
 		$('#tClientes').bootstrapTable('uncheckAll');
 	}).on('shown.bs.modal', function (e) {
@@ -224,6 +229,13 @@ $(document).ready(function () {
 		}
 		if ($('#cve_ruta').val() == '') {
 			$('#cve_ruta').selectpicker('val', $('#_cve_ruta').val());
+		}
+		if ($('#cve_cliente').val() == '') {
+			$('#_cve_articulo').prop('disabled', false);
+			$('#_precio_venta, #_importe_abono').prop('readonly', false)
+		} else {
+			$('#_cve_articulo').prop('disabled', true);
+			$('#_precio_venta, #_importe_abono').prop('readonly', true);
 		}
 		$('#nombre').focus();
 	});
